@@ -1,12 +1,13 @@
+import dotenv from 'dotenv';
+dotenv.config();
+
 import express from 'express';
 import cors from 'cors';
 import bodyParser from 'body-parser';
 
-import mainRouter from './routes/index.js';
-import { connectDB } from './db/index.js'
+import mainRouter from '#routes/index.js';
+import { connectDB } from '#db/index.js';
 
-import dotenv from 'dotenv';
-dotenv.config();
 
 const app = express();
 
@@ -26,10 +27,12 @@ const startServer = async() => {
         await connectDB();
 
         app.listen(PORT, () => {
-            console.log(`Backend listening on PORT: ${PORT}`);
+            console.log(`DB connected, backend listening on PORT: ${PORT}`);
         });
     } catch (error) {
         console.error("Failed to start server:", error);
         process.exit(1);
     }
-}
+};
+
+startServer();

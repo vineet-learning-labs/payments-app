@@ -2,23 +2,25 @@ import mongoose, { Schema } from 'mongoose';
 import * as z from 'zod';
 
 export const connectDB = async() => {
-    try{
-        const mongoUrl = process.env.MONGO_CONN_URL as string;
-        if (!mongoUrl) {
-            throw new Error("Mongo connection URL missing");
-        }
-        await mongoose.connect(mongoUrl);
-    } catch (error){
-        console.log(error);
-    }
-}
+    const mongoUrl = process.env.MONGO_CONN_URL!;
 
-export const userSchema = z.object({
+    if (!mongoUrl) {
+        throw new Error("Mongo connection URL missing");
+    }
+    
+    await mongoose.connect(mongoUrl);
+};
+
+export const ZodUserSchema = z.object({
     username: z.string()
-            .min(3, "Username must be at least 3 chars")
-            .max(10, "Username must be at most 10 chars")
             .trim()
-            .toLowerCase(),
+            .toLowerCase()
+            .min(3, "Username must be at least 3 characters")
+            .max(10, "Username must be at most 10 characters")
+            .regex(
+                /^[a-z0-9]+$/,
+                "Username can only contain lowercase letters (a-z) and numbers (0-9)"
+            ),
 
     firstName: z.string()
             .max(15, "First name must at be at most 15 chars")
@@ -31,10 +33,10 @@ export const userSchema = z.object({
     password: z.string()
             .min(6, "Password must be at least 6 characters")
             .regex(/\d/, "Password must contain at least one number")
-            .regex(/[!@#$%^&*(),.?":{}|<>_\-\\[\]/+=~`]/, "Password must contain at least one special character")
+            .regex(/[^\w\s]/, "Password must contain at least one special character")
 });
 
-export type User = z.infer<typeof userSchema>;
+export type User = z.infer<typeof ZodUserSchema>;
 
 const userMongooseSchema = new Schema<User>({
     username: {
@@ -61,6 +63,7 @@ const userMongooseSchema = new Schema<User>({
     password: {
         type: String,
         required: true,
+        select: false
     }
 });
 

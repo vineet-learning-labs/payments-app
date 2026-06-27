@@ -6,7 +6,7 @@
   "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "dev": "tsx watch index.ts",
+    "dev": "tsx watch --env-file=.env src/index.ts",
     "build": "tsc",
     "start": "node dist/index.js"
   },
@@ -16,11 +16,14 @@
   "dependencies": {
     "@types/body-parser": "^1.19.6",
     "@types/cors": "^2.8.19",
+    "@types/jsonwebtoken": "^9.0.10",
+    "argon2": "^0.44.0",
     "body-parser": "^2.3.0",
     "cors": "^2.8.6",
     "dotenv": "^17.4.2",
     "express": "^5.2.1",
     "install": "^0.13.0",
+    "jsonwebtoken": "^9.0.3",
     "mongoose": "^9.7.3",
     "nodemon": "^3.1.14",
     "npm": "^11.17.0",
@@ -31,5 +34,12 @@
     "@types/node": "^26.0.1",
     "tsx": "^4.22.4",
     "typescript": "^6.0.3"
+  },
+  "imports": {
+    "#db/*": "./src/db/*",
+    "#lib/*": "./src/lib/*",
+    "#routes/*": "./src/routes/*",
+    "#middleware/*": "./src/middleware/*",
+    "#models/*": "./src/models/*"
   }
 }

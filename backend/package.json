@@ -39,7 +39,7 @@
     "#db/*": "./src/db/*",
     "#lib/*": "./src/lib/*",
     "#routes/*": "./src/routes/*",
-    "#middleware/*": "./src/middleware/*",
+    "#middleware/*": "./src/middlewares/*",
     "#models/*": "./src/models/*"
   }
 }

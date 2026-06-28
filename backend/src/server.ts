@@ -11,8 +11,14 @@ import { connectDB } from '#db/index.js';
 
 const app = express();
 
+const frontendUrl = process.env.FRONTEND_URL!;
+
+if (!frontendUrl) {
+    throw new Error("Frontend connection URL missing");
+}
+
 app.use(cors({
-    origin: 'http://localhost:5173',
+    origin: frontendUrl!,
     credentials: true
 }));
 

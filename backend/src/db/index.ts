@@ -53,9 +53,22 @@ export const ZodSignInSchema = z.object({
             .regex(/[^\w\s]/, "Invalid username or password")
 });
 
+export const ZodUpdateSchema = ZodUserSchema.pick({
+    username: true,
+    firstName: true,
+    lastName: true,
+}).partial();
+
+export const ZodTransferSchema = z.object({
+    to: z.string(),
+    amount: z.number().positive()
+});
+
+/* -------------------------------------------------------------------------------------------------------------------------------------- */
+
 export type User = z.infer<typeof ZodUserSchema>;
 
-const userMongooseSchema = new Schema<User>({
+const UserMongooseSchema = new Schema<User>({
     username: {
         type: String,
         unique: true,
@@ -81,7 +94,30 @@ const userMongooseSchema = new Schema<User>({
         type: String,
         required: true,
         select: false
+    },
+}, {
+    versionKey: false,
+});
+
+type Account = {
+    userId: mongoose.Types.ObjectId,
+    balance: number
+};
+
+const AccountMongooseSchema = new Schema<Account>({
+    userId: {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: 'User',
+        required: true,
+        unique: true
+    },
+    balance: {
+        type: Number,
+        required: true,
+        default: () => Math.floor(Math.random() * 10000) + 1,
+        min: 0
     }
 });
 
-export const UserModel = mongoose.model<User>('User', userMongooseSchema);
+export const UserModel = mongoose.model<User>('User', UserMongooseSchema);
+export const AccountModel = mongoose.model<Account>('Account', AccountMongooseSchema);

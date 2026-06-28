@@ -36,6 +36,23 @@ export const ZodUserSchema = z.object({
             .regex(/[^\w\s]/, "Password must contain at least one special character")
 });
 
+export const ZodSignInSchema = z.object({
+    username: z.string()
+            .trim()
+            .toLowerCase()
+            .min(3, "Invalid username or password")
+            .max(10, "Invalid username or password")
+            .regex(
+                /^[a-z0-9]+$/,
+                "Invalid username or password"
+            ),
+
+    password: z.string()
+            .min(6, "Invalid username or password")
+            .regex(/\d/, "Invalid username or password")
+            .regex(/[^\w\s]/, "Invalid username or password")
+});
+
 export type User = z.infer<typeof ZodUserSchema>;
 
 const userMongooseSchema = new Schema<User>({

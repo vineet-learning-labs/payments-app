@@ -13,6 +13,9 @@ interface SignUpInput {
 }
 
 const Signup = () => {
+    const[ loading, setLoading ] = useState(false);
+    const [ success, setSuccess ] = useState(false);
+
     const [ errors, setErrors ] = useState<string[]>([]);
     const [ username, setUsername ] = useState("");
     const [ firstName, setFirstName ] = useState("");
@@ -21,19 +24,26 @@ const Signup = () => {
 
     const navigate = useNavigate();
 
+    // const delay = (ms: number) =>
+    // new Promise(resolve => setTimeout(resolve, ms));
+
     const handleSignup = async (user: SignUpInput) => {
         setErrors([]);
+        setSuccess(false);
+        setLoading(true);
         try{
             const response = await axios.post(
                 `${backendUrl}/api/v1/user/signup`,
                 user
             );
             if (response.status === StatusCodes.CREATED){
-                setErrors([]);
-                
+                setSuccess(true);
                 const token: string = response.data.token;
                 localStorage.setItem('token', token);
-                // navigate('/dashboard');
+
+                // await delay(2000);
+                
+                navigate('/dashboard');
             }
         } catch (error) {
             if (axios.isAxiosError(error)) {
@@ -42,6 +52,8 @@ const Signup = () => {
                 console.error(error);
                 setErrors(["An unexpected error occurred."]);
             }
+        } finally{
+            setLoading(false);
         }
     }
 
@@ -70,6 +82,13 @@ const Signup = () => {
                                 ))
                             }
                             </div>) : null
+                    }
+                    {
+                        success ? (
+                            <div className="text-green-600 text-xs">
+                                Signup successful, redirecting to dashboard
+                            </div>
+                        ) : null
                     }
                     <div className="py-2">
                         <h2 className="my-2"> Username </h2>
@@ -107,7 +126,7 @@ const Signup = () => {
                     <div className="py-2">
                         <h2 className="my-2"> Password </h2>
                         <input
-                            type="text"
+                            type="password"
                             className="w-full border-gray-300 pl-4 rounded-lg border px-4 py-3 outline-none"
                             placeholder="Password"
                             value={password}
@@ -116,8 +135,17 @@ const Signup = () => {
                         />
                     </div>
                     <div className="pt-4">
-                        <button type="submit" className="bg-black text-white w-full p-2 py-3 rounded-xl font-medium hover:bg-gray-800">
-                            Sign Up
+                        <button
+                            type="submit"
+                            className={`text-white w-full p-2 py-3 rounded-xl font-medium
+                                    ${loading
+                                        ? "bg-gray-500 cursor-not-allowed"
+                                        : "bg-black hover:bg-gray-800"         
+                                    }
+                                `}
+                            disabled={loading}
+                        >
+                            {loading ? "Signing Up..." : "Sign Up"}
                         </button>
                         <div>
                             <div className="flex justify-around p-4">
@@ -127,6 +155,7 @@ const Signup = () => {
                         </div>
                     </div>
                 </form>
+
             </div>
         </div>
     )

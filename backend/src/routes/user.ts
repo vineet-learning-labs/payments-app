@@ -23,7 +23,7 @@ router.post('/signup', async(req, res)=>{
         const userExists = await UserModel.findOne( {username: user.username} );
         if (userExists){
             return res.status(StatusCodes.CONFLICT).json({
-                error: "Username already exists"
+                errors: ["Username already exists"]
             });
         }
 
@@ -66,7 +66,7 @@ router.post('/signup', async(req, res)=>{
         }
 
         return res.status(StatusCodes.INTERNAL_SERVER_ERROR).json({
-            error: "Some error occured while sign-up, please try again"
+            errors: ["Some error occured while sign-up, please try again"]
         });
     } finally{
         if (session)
@@ -89,7 +89,7 @@ router.post('/signin', async (req, res)=>{
 
         if (!userExists){
             return res.status(StatusCodes.UNAUTHORIZED).json({
-                error: "Invalid username or password"
+                errors: ["Invalid username or password"]
             });
         }
 
@@ -98,7 +98,7 @@ router.post('/signin', async (req, res)=>{
 
         if (!match){
             return res.status(StatusCodes.UNAUTHORIZED).json({
-                error: "Invalid username or password"
+                errors: ["Invalid username or password"]
             });
         }
 
@@ -115,7 +115,7 @@ router.post('/signin', async (req, res)=>{
     } catch(error){
         console.error(error);
         return res.status(StatusCodes.INTERNAL_SERVER_ERROR).json({
-            error: "Some error occured while sign-in, please try again"
+            errors: ["Some error occured while sign-in, please try again"]
         });
     }
 });
@@ -139,7 +139,7 @@ router.put('/', authMiddleware, async(req, res)=>{
 
         if (!updateUser){
             return res.status(StatusCodes.NOT_FOUND).json({
-                error: "User not found"
+                errors: ["User not found"]
             });
         }
 
@@ -149,7 +149,7 @@ router.put('/', authMiddleware, async(req, res)=>{
     } catch(error){
         console.error(error);
         return res.status(StatusCodes.INTERNAL_SERVER_ERROR).json({
-            error: "Some error occured while updating user, please try again"
+            errors: ["Some error occured while updating user, please try again"]
         });
     }
 });
@@ -171,7 +171,7 @@ router.get('/bulk', authMiddleware, async (req, res)=>{
     } catch(error){
         console.error(error);
         return res.status(StatusCodes.INTERNAL_SERVER_ERROR).json({
-            error: "Some error occured while fetching user, please try again"
+            errors: ["Some error occured while fetching user, please try again"]
         });
     }
 });

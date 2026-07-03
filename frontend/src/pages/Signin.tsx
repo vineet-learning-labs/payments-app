@@ -1,6 +1,6 @@
 import { Link, useNavigate } from "react-router-dom";
 import axios from "axios";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { StatusCodes } from "#lib/http/index.ts";
 
 const backendUrl = import.meta.env.VITE_BACKEND_URL;
@@ -11,14 +11,22 @@ interface SignInInput {
 }
 
 const Signin = () => {
+    const navigate = useNavigate();
+
+    useEffect(() => {
+        const token = localStorage.getItem("token");
+
+        if (token) {
+            navigate("/dashboard", { replace: true });
+        }
+    }, [navigate]);
+
     const[ loading, setLoading ] = useState(false);
     const [ success, setSuccess ] = useState(false);
 
     const [ errors, setErrors ] = useState<string[]>([]);
     const [ username, setUsername ] = useState("");
     const [ password, setPassword ] = useState("");
-
-    const navigate = useNavigate();
 
     // const delay = (ms: number) =>
     // new Promise(resolve => setTimeout(resolve, ms));

@@ -156,10 +156,13 @@ router.put('/', authMiddleware, async(req, res)=>{
 
 router.get('/bulk', authMiddleware, async (req, res)=>{
     try{
+        const userId = req.user.sub;
         const userFilter = req.query.filter as string || "";
         
         const allUsers = await UserModel.find( {
+            _id: { $ne: userId },
             $or: [
+                { username: { $regex: userFilter, $options: "i" } },
                 { firstName: { $regex: userFilter, $options: "i" } },
                 { lastName: { $regex: userFilter, $options: "i" } }
             ]
@@ -167,6 +170,35 @@ router.get('/bulk', authMiddleware, async (req, res)=>{
 
         return res.status(StatusCodes.OK).json({
             users: allUsers
+        });
+    } catch(error){
+        console.error(error);
+        return res.status(StatusCodes.INTERNAL_SERVER_ERROR).json({
+            errors: ["Some error occured while fetching user, please try again"]
+        });
+    }
+});
+
+router.get('/me', authMiddleware, async (req, res)=>{
+    try{
+        const userId = req.user.sub;
+        
+        const userInfo = await UserModel.findById(userId).select("username firstName lastName");
+        const userBalance = await AccountModel.findOne({ userId });;
+        
+        if (!userInfo || !userBalance) {
+            return res.status(StatusCodes.NOT_FOUND).json({
+            errors: ["User not found"]
+        });
+    }
+
+        return res.status(StatusCodes.OK).json({
+            user: {
+                username: userInfo.username,
+                firstName: userInfo.firstName,
+                lastName: userInfo.lastName,
+                balance: userBalance.balance
+            }
         });
     } catch(error){
         console.error(error);

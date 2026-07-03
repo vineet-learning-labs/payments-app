@@ -13,7 +13,7 @@ if (!jwt_secret) {
 }
 
 export const signJwt=(payload: JWTPayload): string => {
-    const token = jwt.sign(payload, jwt_secret, { expiresIn: "1h" });
+    const token = jwt.sign(payload, jwt_secret, { expiresIn: "30d" });
     return token;
 };
 

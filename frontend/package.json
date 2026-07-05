@@ -35,6 +35,8 @@
   "imports": {
     "#pages/*": "./src/pages/*",
     "#public/*": "./public/*",
-    "#lib/*": "./src/lib/*"
+    "#lib/*": "./src/lib/*",
+    "#types/*": "./src/types/*",
+    "#utils/*": "./src/utils/*"
   }
 }

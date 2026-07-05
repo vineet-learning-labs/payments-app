@@ -2,16 +2,10 @@ import { StatusCodes } from "#lib/http/index.ts";
 import axios from "axios";
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
+import type { User } from "#types/user.ts"
+import { delay } from "#utils/delay.ts"
 
 const backendUrl = import.meta.env.VITE_BACKEND_URL;
-
-interface User {
-    _id: string,
-    username: string,
-    firstName: string,
-    lastName: string,
-    balance ?: number
-}
 
 const Dashboard = () => {
     const navigate = useNavigate();
@@ -46,7 +40,9 @@ const Dashboard = () => {
             if (axios.isAxiosError(error)) {
                 setErrors(error.response?.data.errors ?? ["Unable to connect to the server"]);
                 if (error.response?.status === 401){
+                    setErrors(["Invalid login, redirecting to dashboard"]);
                     localStorage.removeItem("token");
+                    await delay(1000);
                     navigate("/signin", { replace: true });
                 }
             } else {
@@ -72,14 +68,15 @@ const Dashboard = () => {
                 }
             );
             if (response.status === StatusCodes.OK){
-                console.log(response.data.users);
                 setMatchedUsers(response.data.users);
             }
         } catch (error) {
             if (axios.isAxiosError(error)) {
                 setErrors(error.response?.data.errors ?? ["Unable to connect to the server"]);
                 if (error.response?.status === 401){
+                    setErrors(["Invalid login, redirecting to dashboard"]);
                     localStorage.removeItem("token");
+                    await delay(1000);
                     navigate("/signin", { replace: true });
                 }
             } else {
@@ -94,10 +91,15 @@ const Dashboard = () => {
     useEffect(() => {
         const token = localStorage.getItem("token");
 
-        if (!token) {
-            navigate("/signin", { replace: true });
+        const tokenCheck=async()=>{
+            if (!token) {
+                setErrors(["Invalid login, redirecting to dashboard"]);
+                await delay(1000);
+                navigate("/signin", { replace: true });
+            }
         }
 
+        tokenCheck();
         fetchSelf();
 
     }, [navigate]);
@@ -189,7 +191,14 @@ const Dashboard = () => {
                                             </div>
                                         </div>
                                     </div>
-                                    <button className="px-4 py-2 bg-black hover:bg-gray-800 text-white rounded-xl font-medium">
+                                    <button 
+                                      className="px-4 py-2 bg-black hover:bg-gray-800 text-white rounded-xl font-medium"
+                                      onClick={() => navigate("/send", {
+                                        state: {
+                                            user
+                                        }
+                                      })}
+                                    >
                                         Send Money
                                     </button>
                                 </div>

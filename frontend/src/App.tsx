@@ -3,6 +3,7 @@ import { BrowserRouter, Routes, Route } from "react-router-dom"
 import Signup from '#pages/Signup.tsx'
 import Signin from "#pages/Signin.tsx"
 import Dashboard from "#pages/Dashboard.tsx"
+import SendMoney from "#pages/SendMoney.tsx"
 
 function App() {
 
@@ -25,7 +26,11 @@ function App() {
               <Dashboard />
             </Suspense>}
           />
-         {/* <Route path="/send" element={<Suspense fallback="loading..."><SendMoney /></Suspense>} /> */}
+         <Route path="/send" element={
+            <Suspense fallback="loading...">
+              <SendMoney />
+            </Suspense>}
+          />
         </Routes>
       </BrowserRouter>
     </>

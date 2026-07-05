@@ -154,30 +154,36 @@ router.put('/', authMiddleware, async(req, res)=>{
     }
 });
 
-router.get('/bulk', authMiddleware, async (req, res)=>{
-    try{
-        const userId = req.user.sub;
-        const userFilter = req.query.filter as string || "";
-        
-        const allUsers = await UserModel.find( {
-            _id: { $ne: userId },
-            $or: [
-                { username: { $regex: userFilter, $options: "i" } },
-                { firstName: { $regex: userFilter, $options: "i" } },
-                { lastName: { $regex: userFilter, $options: "i" } }
-            ]
-        });
+  router.get('/bulk', authMiddleware, async (req, res)=>{
+      try{
+          const userId = req.user.sub;
+          let userFilter = req.query.filter as string || "";
 
-        return res.status(StatusCodes.OK).json({
-            users: allUsers
-        });
-    } catch(error){
-        console.error(error);
-        return res.status(StatusCodes.INTERNAL_SERVER_ERROR).json({
-            errors: ["Some error occured while fetching user, please try again"]
-        });
-    }
-});
+          if (!/^[a-zA-Z0-9\s]*$/.test(userFilter)) {
+              return res.status(StatusCodes.BAD_REQUEST).json({
+                  errors: ["Invalid search filter"]
+              });
+          }
+
+          const allUsers = await UserModel.find( {
+              _id: { $ne: userId },
+              $or: [
+                  { username: { $regex: userFilter, $options: "i" } },
+                  { firstName: { $regex: userFilter, $options: "i" } },
+                  { lastName: { $regex: userFilter, $options: "i" } }
+              ]
+          });
+
+          return res.status(StatusCodes.OK).json({
+              users: allUsers
+          });
+      } catch(error){
+          console.error(error);
+          return res.status(StatusCodes.INTERNAL_SERVER_ERROR).json({
+              errors: ["Some error occured while fetching user, please try again"]
+          });
+      }
+  });
 
 router.get('/me', authMiddleware, async (req, res)=>{
     try{

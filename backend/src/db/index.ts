@@ -24,10 +24,18 @@ export const ZodUserSchema = z.object({
 
     firstName: z.string()
             .max(15, "First name must at be at most 15 chars")
+            .regex(
+                /^[a-zA-Z]+$/,
+                "First Name can only contain letters"
+            )
             .trim(),
 
     lastName: z.string()
             .max(15, "Last name must at be at most 15 chars")
+            .regex(
+                /^[a-zA-Z]+$/,
+                "Last Name can only contain letters"
+            )
             .trim(),
 
     password: z.string()

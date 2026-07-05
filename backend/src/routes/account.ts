@@ -1,7 +1,7 @@
 import { Router } from 'express';
 import { authMiddleware } from '../middlewares/authMiddleware.js';
-import StatusCodes from '#lib/http/status.js';
-import { AccountModel, ZodTransferSchema } from '#db/index.js';
+import StatusCodes from '../lib/http/status.js';
+import { AccountModel, ZodTransferSchema } from '../db/index.js';
 import mongoose from 'mongoose';
 
 const router = Router();

@@ -1,6 +1,6 @@
 import type { Request, Response, NextFunction } from 'express';
-import { verifyJwt } from '#lib/jwt/jwt.js';
-import StatusCodes from "#lib/http/status.js";
+import { verifyJwt } from '../lib/jwt/jwt.js';
+import StatusCodes from "../lib/http/status.js";
 
 export const authMiddleware = (req: Request, res: Response, next: NextFunction) => {
     const { authorization } = req.headers;

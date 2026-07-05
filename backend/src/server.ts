@@ -5,8 +5,8 @@ import express from 'express';
 import cors from 'cors';
 import bodyParser from 'body-parser';
 
-import mainRouter from '#routes/main.js';
-import { connectDB } from '#db/index.js';
+import mainRouter from './routes/main.js';
+import { connectDB } from './db/index.js';
 
 
 const app = express();

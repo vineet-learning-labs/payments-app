@@ -1,7 +1,7 @@
 import { Router } from 'express';
-import { ZodSignInSchema, ZodUserSchema, UserModel, ZodUpdateSchema, AccountModel } from '#db/index.js';
-import { type JWTPayload, signJwt } from '#lib/jwt/jwt.js'
-import StatusCodes from "#lib/http/status.js";
+import { ZodSignInSchema, ZodUserSchema, UserModel, ZodUpdateSchema, AccountModel } from '../db/index.js';
+import { type JWTPayload, signJwt } from "../lib/jwt/jwt.js"
+import StatusCodes from "../lib/http/status.js";
 import * as argon2 from 'argon2'
 import { authMiddleware } from '../middlewares/authMiddleware.js';
 import mongoose from "mongoose";

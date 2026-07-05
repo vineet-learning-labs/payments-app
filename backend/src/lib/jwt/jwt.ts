@@ -1,6 +1,14 @@
 import jwt, { type JwtPayload } from 'jsonwebtoken';
 
-const jwt_secret = process.env.JWT_SECRET!;
+function getJwtSecret(): string {
+    const secret = process.env.JWT_SECRET;
+
+    if (!secret) {
+        throw new Error("JWT_SECRET is missing");
+    }
+
+    return secret;
+}
 
 export type JWTPayload = {
     sub: string,
@@ -8,15 +16,10 @@ export type JWTPayload = {
     role: 'user' | 'admin',
 }
 
-if (!jwt_secret) {
-    throw new Error("JWT_SECRET is missing");
-}
-
 export const signJwt=(payload: JWTPayload): string => {
-    const token = jwt.sign(payload, jwt_secret, { expiresIn: "30d" });
-    return token;
+    return jwt.sign(payload, getJwtSecret(), { expiresIn: "30d" });
 };
 
 export const verifyJwt=(token: string): JWTPayload => {
-    return jwt.verify(token, jwt_secret) as JWTPayload;
+    return jwt.verify(token, getJwtSecret()) as JWTPayload;
 };

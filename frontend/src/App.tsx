@@ -1,5 +1,5 @@
 import { Suspense } from "react"
-import { BrowserRouter, Routes, Route } from "react-router-dom"
+import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom"
 import Signup from '#pages/Signup.tsx'
 import Signin from "#pages/Signin.tsx"
 import Dashboard from "#pages/Dashboard.tsx"
@@ -11,6 +11,9 @@ function App() {
     <>
       <BrowserRouter>
         <Routes>
+          <Route path="/" element={
+            <Navigate to="/signin" replace />}
+          />
           <Route path="/signup" element={
             <Suspense fallback="loading...">
               <Signup />
@@ -26,7 +29,7 @@ function App() {
               <Dashboard />
             </Suspense>}
           />
-         <Route path="/send" element={
+          <Route path="/send" element={
             <Suspense fallback="loading...">
               <SendMoney />
             </Suspense>}

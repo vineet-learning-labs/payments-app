@@ -25,7 +25,6 @@ export const SendMoney = () => {
             const tokenCheck=async()=>{
                 if (!token) {
                     setErrors(["Invalid login, redirecting to dashboard"]);
-                    await delay(1000);
                     navigate("/signin", { replace: true });
                 }
             }
@@ -79,7 +78,6 @@ export const SendMoney = () => {
                     if (error.response?.status === 401){
                         setErrors(["Invalid login, redirecting to dashboard"]);
                         localStorage.removeItem("token");
-                        await delay(1000);
                         navigate("/signin", { replace: true });
                     }
                 } else {

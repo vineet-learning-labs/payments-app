@@ -42,7 +42,6 @@ const Dashboard = () => {
                 if (error.response?.status === 401){
                     setErrors(["Invalid login, redirecting to dashboard"]);
                     localStorage.removeItem("token");
-                    await delay(1000);
                     navigate("/signin", { replace: true });
                 }
             } else {
@@ -94,7 +93,6 @@ const Dashboard = () => {
         const tokenCheck=async()=>{
             if (!token) {
                 setErrors(["Invalid login, redirecting to dashboard"]);
-                await delay(1000);
                 navigate("/signin", { replace: true });
             }
         }
